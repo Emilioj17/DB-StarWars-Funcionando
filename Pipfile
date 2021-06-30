@@ -5,9 +5,19 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-migrate = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 autopep8 = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+setup = "export FLASK_APP=src/app.py"  # mac o linux
+#setup_app_flask = "SET FLASK_APP=src/app.py"  # windows
+init = "flask db init" # crea la carpeta migrations
+migrate = "flask db migrate" # transforma todos los modelos del archivo models.py en migraciones
+upgrade = "flask db upgrade" # ejecuta todas las migraciones sobre la base de datos
+downgrade = "flask db downgrade" # regresa la base de datos a un estado anterior
