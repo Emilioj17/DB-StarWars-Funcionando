@@ -1,11 +1,7 @@
 import json
-from flask import Flask
-from flask import jsonify
-from flask import request
-from flask import render_template
+from flask import Flask, jsonify, request, render_template
 from flask_migrate import Migrate
-from models import db, Persona, Planeta, Usuario
-from models import Personaje_favorito, Planeta_favorito
+from models import db, Persona, Planeta, Usuario, Personaje_favorito, Planeta_favorito
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -13,9 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db.init_app(app)
 Migrate(app, db)
 
+
 # Main html
-
-
 @app.route('/')
 def main():
     return render_template('index.html')
