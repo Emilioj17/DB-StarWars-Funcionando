@@ -19,6 +19,10 @@ class Persona(db.Model):
             "descripcion": self.descripcion
         }
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class Planeta(db.Model):
     __tablename__ = 'planetas'
@@ -37,6 +41,10 @@ class Planeta(db.Model):
             "descripcion": self.descripcion
         }
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
@@ -50,6 +58,10 @@ class Usuario(db.Model):
             "correo": self.correo,
             "clave": self.clave
         }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Personaje_favorito(db.Model):
@@ -67,9 +79,17 @@ class Personaje_favorito(db.Model):
             "personaje_id": self.personaje_id
         }
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Planeta_favorito(db.Model):
-    __tablename__ = 'plentas_favoritos'
+    __tablename__ = 'planetas_favoritos'
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey(
         "usuarios.id"), nullable=False)
@@ -82,3 +102,11 @@ class Planeta_favorito(db.Model):
             "usuario_id": self.usuario_id,
             "planeta_id": self.planeta_id
         }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

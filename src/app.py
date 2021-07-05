@@ -40,9 +40,7 @@ def list_personas(id=None):
         persona.altura = altura
         persona.masa = masa
         persona.descripcion = descripcion
-
-        db.session.add(persona)
-        db.session.commit()
+        persona.save()
 
         return jsonify(persona.serialize())
 
@@ -71,8 +69,7 @@ def list_planetas(id=None):
         planeta.poblacion = poblacion
         planeta.descripcion = descripcion
 
-        db.session.add(planeta)
-        db.session.commit()
+        planeta.save()
 
         return jsonify(planeta.serialize())
 
@@ -105,17 +102,15 @@ def list_usuarios(id=None):
         usuario = Usuario()
         usuario.correo = correo
         usuario.clave = clave
-
-        db.session.add(usuario)
-        db.session.commit()
+        usuario.save()
 
         return jsonify(usuario.serialize())
 
 
 # Post a Personaje Favorito según id Usuario
-@app.route('/api/usuarios/personaje/<int:id>', methods=['POST', 'DELETE'])
+@app.route('/api/usuarios/personaje/<int:id>', methods=['POST'])
 def create_personaje(id):
-    if(request.method == 'GET'):
+    if(request.method == 'POST'):
         request_body = request.data
         decoded_object = json.loads(request_body)
         usuario_id = id
@@ -124,23 +119,13 @@ def create_personaje(id):
         personaje = Personaje_favorito()
         personaje.usuario_id = usuario_id
         personaje.personaje_id = personaje_id
-
-        db.session.add(personaje)
-        db.session.commit()
+        personaje.save()
 
         return jsonify(personaje.serialize())
 
-    if(request.method == 'DELETE'):
-        personajes_favoritos_usuario = Personaje_favorito.query.filter(
-            Personaje_favorito.usuario_id == id).first()
-        db.session.delete(personajes_favoritos_usuario)
-        db.session.commit()
-
-        return jsonify({"success": "Personaje Favorito deleted"}), 200
-
 
 # Post a Planeta Favorito según id Usuario
-@app.route('/api/usuarios/planeta/<int:id>', methods=['POST', 'DELETE'])
+@app.route('/api/usuarios/planeta/<int:id>', methods=['POST'])
 def create_planeta_favorito(id):
     if(request.method == 'POST'):
         request_body = request.data
@@ -150,19 +135,31 @@ def create_planeta_favorito(id):
         planeta = Planeta_favorito()
         planeta.usuario_id = usuario_id
         planeta.planeta_id = planeta_id
-
-        db.session.add(planeta)
-        db.session.commit()
+        planeta.save()
 
         return jsonify(planeta.serialize())
 
-    if(request.method == 'DELETE'):
-        planetas_favoritos_usuario = Planeta_favorito.query.filter(
-            Planeta_favorito.usuario_id == id)
-        db.session.delete(planetas_favoritos_usuario)
-        db.session.commit()
 
-        return jsonify({"success": "Planeta Favorito deleted"}), 200
+@app.route('/api/usuarios/personaje/<int:id>', methods=['DELETE'])
+def delete_personaje(id):
+
+    personajes_favoritos_usuario = Personaje_favorito.query.filter(
+        Personaje_favorito.usuario_id == id).first()
+    db.session.delete(personajes_favoritos_usuario)
+    db.session.commit()
+
+    return jsonify({"success": "Personaje Favorito deleted"}), 200
+
+
+@app.route('/api/usuarios/planeta/<int:id>', methods=['DELETE'])
+def delete_planeta(id):
+
+    planetas_favoritos_usuario = Planeta_favorito.query.filter(
+        Planeta_favorito.usuario_id == id).first()
+    db.session.delete(planetas_favoritos_usuario)
+    db.session.commit()
+
+    return jsonify({"success": "Planeta Favorito deleted"}), 200
 
 
 if __name__ == '__main__':
